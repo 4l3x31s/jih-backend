@@ -7,13 +7,15 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { PayOption } from "./PayOption";
-import { UserOperator } from "./UserOperator";
+import { Languages } from "./Languages";
+import { PayOptions } from "./PayOptions";
+import { UsersOperators } from "./UsersOperators";
 
+@Index("ixfk_user_languages", ["idLanguage"], {})
 @Index("ixfk_user_pay_option", ["idPayOption"], {})
 @Index("pk_usuarios", ["idUser"], { unique: true })
-@Entity("user", { schema: "public" })
-export class User {
+@Entity("users", { schema: "public" })
+export class Users {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_user" })
   idUser: string;
 
@@ -38,10 +40,14 @@ export class User {
   @Column("boolean", { name: "state" })
   state: boolean;
 
-  @ManyToOne(() => PayOption, (payOption) => payOption.users)
-  @JoinColumn([{ name: "id_pay_option", referencedColumnName: "idPayOption" }])
-  idPayOption2: PayOption;
+  @ManyToOne(() => Languages, (languages) => languages.users)
+  @JoinColumn([{ name: "id_language", referencedColumnName: "idLanguage" }])
+  idLanguage2: Languages;
 
-  @OneToMany(() => UserOperator, (userOperator) => userOperator.idUser2)
-  userOperators: UserOperator[];
+  @ManyToOne(() => PayOptions, (payOptions) => payOptions.users)
+  @JoinColumn([{ name: "id_pay_option", referencedColumnName: "idPayOption" }])
+  idPayOption2: PayOptions;
+
+  @OneToMany(() => UsersOperators, (usersOperators) => usersOperators.idUser2)
+  usersOperators: UsersOperators[];
 }

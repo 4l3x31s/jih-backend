@@ -14,7 +14,7 @@ import { OperatorModule } from './modules/operator/operator.module';
       port: 5432,
       username: "postgres",
 			password: "postgres",
-      database: 'DAFRRHH',
+      database: 'JIH',
       schema: "public",
       synchronize: false,
       entities: [__dirname + '/models/**/*{.ts,.js}'],

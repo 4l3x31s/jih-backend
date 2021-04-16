@@ -5,11 +5,11 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Operator } from "./Operator";
+import { Operators } from "./Operators";
 
 @Index("pk_country", ["idCountry"], { unique: true })
-@Entity("country", { schema: "public" })
-export class Country {
+@Entity("countries", { schema: "public" })
+export class Countries {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_country" })
   idCountry: string;
 
@@ -28,6 +28,6 @@ export class Country {
   @Column("boolean", { name: "state" })
   state: boolean;
 
-  @OneToMany(() => Operator, (operator) => operator.idCountry2)
-  operators: Operator[];
+  @OneToMany(() => Operators, (operators) => operators.idCountry2)
+  operators: Operators[];
 }

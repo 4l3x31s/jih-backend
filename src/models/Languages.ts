@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { SupportLanguages } from "./SupportLanguages";
+import { Users } from "./Users";
 
 @Index("pk_languages", ["idLanguage"], { unique: true })
 @Entity("languages", { schema: "public" })
@@ -27,4 +28,7 @@ export class Languages {
     (supportLanguages) => supportLanguages.idLanguage2
   )
   supportLanguages: SupportLanguages[];
+
+  @OneToMany(() => Users, (users) => users.idLanguage2)
+  users: Users[];
 }

@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Languages } from "./Languages";
-import { Operator } from "./Operator";
+import { Operators } from "./Operators";
 
 @Index("ixfk_support_languages_languages", ["idLanguage"], {})
 @Index("ixfk_support_languages_operator", ["idOperator"], {})
@@ -33,7 +33,7 @@ export class SupportLanguages {
   @JoinColumn([{ name: "id_language", referencedColumnName: "idLanguage" }])
   idLanguage2: Languages;
 
-  @ManyToOne(() => Operator, (operator) => operator.supportLanguages)
+  @ManyToOne(() => Operators, (operators) => operators.supportLanguages)
   @JoinColumn([{ name: "id_operator", referencedColumnName: "idOperator" }])
-  idOperator2: Operator;
+  idOperator2: Operators;
 }

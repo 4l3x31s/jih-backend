@@ -7,14 +7,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Country } from "./Country";
+import { Countries } from "./Countries";
 import { SupportLanguages } from "./SupportLanguages";
-import { UserOperator } from "./UserOperator";
+import { UsersOperators } from "./UsersOperators";
 
 @Index("ixfk_operator_country", ["idCountry"], {})
 @Index("pk_operator", ["idOperator"], { unique: true })
-@Entity("operator", { schema: "public" })
-export class Operator {
+@Entity("operators", { schema: "public" })
+export class Operators {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_operator" })
   idOperator: string;
 
@@ -42,9 +42,9 @@ export class Operator {
   @Column("boolean", { name: "state" })
   state: boolean;
 
-  @ManyToOne(() => Country, (country) => country.operators)
+  @ManyToOne(() => Countries, (countries) => countries.operators)
   @JoinColumn([{ name: "id_country", referencedColumnName: "idCountry" }])
-  idCountry2: Country;
+  idCountry2: Countries;
 
   @OneToMany(
     () => SupportLanguages,
@@ -52,6 +52,9 @@ export class Operator {
   )
   supportLanguages: SupportLanguages[];
 
-  @OneToMany(() => UserOperator, (userOperator) => userOperator.idOperator2)
-  userOperators: UserOperator[];
+  @OneToMany(
+    () => UsersOperators,
+    (usersOperators) => usersOperators.idOperator2
+  )
+  usersOperators: UsersOperators[];
 }

@@ -6,14 +6,14 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Operator } from "./Operator";
-import { User } from "./User";
+import { Operators } from "./Operators";
+import { Users } from "./Users";
 
 @Index("ixfk_user_operator_operator", ["idOperator"], {})
 @Index("ixfk_user_operator_user", ["idUser"], {})
 @Index("pk_user_operator", ["idUserOperator"], { unique: true })
-@Entity("user_operator", { schema: "public" })
-export class UserOperator {
+@Entity("users_operators", { schema: "public" })
+export class UsersOperators {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_user_operator" })
   idUserOperator: string;
 
@@ -35,11 +35,11 @@ export class UserOperator {
   @Column("boolean", { name: "state" })
   state: boolean;
 
-  @ManyToOne(() => Operator, (operator) => operator.userOperators)
+  @ManyToOne(() => Operators, (operators) => operators.usersOperators)
   @JoinColumn([{ name: "id_operator", referencedColumnName: "idOperator" }])
-  idOperator2: Operator;
+  idOperator2: Operators;
 
-  @ManyToOne(() => User, (user) => user.userOperators)
+  @ManyToOne(() => Users, (users) => users.usersOperators)
   @JoinColumn([{ name: "id_user", referencedColumnName: "idUser" }])
-  idUser2: User;
+  idUser2: Users;
 }
