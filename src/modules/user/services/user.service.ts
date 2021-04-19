@@ -14,10 +14,17 @@ export class UserService {
     ) { }
 
     createUser(user: Users): Promise<Users>{
+        user.registrationDate = new Date();
+        user.user = user.email;
+        if(user.state === undefined) {
+            user.state = true;
+        }
         return this._usersRepository.save(user);
     }
     findUserByUserPass(user: string, pass: string):Promise<Users> {
-        return this._usersRepository.findOne({user: user, pass: pass});
+        console.log(user)
+        console.log(pass)
+        return this._usersRepository.findOneOrFail({email: user, pass: pass, state: true});
     }
     findUserOperatorByUser(idUser: string): Promise<UsersOperators[]> {
         return this._usersOperatorsRepository.find({idUser: idUser});

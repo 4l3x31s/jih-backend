@@ -1,7 +1,7 @@
 import { SupportLanguages } from './../../../models/SupportLanguages';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getConnection } from 'typeorm';
+import { Repository, getConnection, FindRelationsNotFoundError } from 'typeorm';
 import { Operators } from '../../../models/Operators';
 import { UsersOperators } from '../../../models/UsersOperators';
 import * as moment from 'moment';
@@ -30,31 +30,55 @@ export class OperatorService {
         return this._operatorRepository.find();
     }
     createOperator(req: Operators): Promise<Operators>{
-        
+        req.date = new Date();
+        if(req.state === undefined){
+            req.state = true;
+        }
         return this._operatorRepository.save(req);
     }
     createSupportLanguages(req: SupportLanguages[]): Promise<SupportLanguages[]> {
+        for (let index = 0; index < req.length; index++) {
+            req[index].registerDate = new Date();
+            if(req[index].state === undefined){
+                req[index].state = true;
+            }
+            
+        }
         return this._supportLanguagesRepository.save(req);
     }
     listSupportLanguagesByOperator(idOperator: string): Promise<SupportLanguages[]> {
         return this._supportLanguagesRepository.find({idOperator: idOperator, state: true});
     }
     createSupportLanguagesOne(req: SupportLanguages): Promise<SupportLanguages> {
+        if(req.state=== undefined){
+            req.state = true;
+        }
+        req.registerDate = new Date();
         return this._supportLanguagesRepository.save(req);
     }
     createPayOptions(req: PayOptions): Promise<PayOptions> {
+        if(req.state=== undefined){
+            req.state = true;
+        }
         return this._payOptionsRepository.save(req);
     }
     listPayOptions(): Promise<PayOptions[]> {
         return this._payOptionsRepository.find({state: true});
     }
     createLanguages(req: Languages): Promise<Languages> {
+        if(req.state === undefined){
+            req.state = true;
+        }
         return this._languagesRepository.save(req);
     }
     listLanguages():Promise<Languages[]>{
         return this._languagesRepository.find({state: true});
     }
     createCountries(req: Countries):Promise<Countries> {
+        if(req.state === undefined){
+            req.state = true;
+        }
+        req.registerDate = new Date();
         return this._countriesRepository.save(req);
     }
     async agregarNuevoOperador(req: ReqOperatorsDto): Promise<GlobalDto> {
@@ -67,9 +91,16 @@ export class OperatorService {
         const supportLanguagesRepository = queryRunner.manager.getRepository(SupportLanguages);
         try {
             const fechaActual = new Date(moment(new Date(), 'YYYY-MM-DD HH:mm').toDate());
+            req.operator.state = true;
+            req.operator.date = new Date();
             const newOperator: Operators = await operatorsRepository.save(req.operator);
             for (const iterator of req.languages) {
                 iterator.idOperator = newOperator.idOperator;
+            }
+            for (let index = 0; index < req.languages.length; index++) {
+                req.languages[index].idOperator= newOperator.idOperator;
+                req.languages[index].registerDate = new Date();
+                req.languages[index].state = true;
             }
             await supportLanguagesRepository.save(req.languages);
             await queryRunner.commitTransaction();
