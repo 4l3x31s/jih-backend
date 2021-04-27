@@ -98,9 +98,9 @@ export class OperatorService {
             req.operator.state = true;
             req.operator.date = new Date();
             const newOperator: Operators = await operatorsRepository.save(req.operator);
-            for (const iterator of req.languages) {
+            /*for (const iterator of req.languages) {
                 iterator.idOperator = newOperator.idOperator;
-            }
+            }*/
             for (let index = 0; index < req.languages.length; index++) {
                 req.languages[index].idOperator= newOperator.idOperator;
                 req.languages[index].registerDate = new Date();
