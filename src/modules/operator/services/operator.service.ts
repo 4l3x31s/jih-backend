@@ -1,7 +1,7 @@
 import { SupportLanguages } from './../../../models/SupportLanguages';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getConnection, FindRelationsNotFoundError } from 'typeorm';
+import { getConnection } from 'typeorm';
 import { Operators } from '../../../models/Operators';
 import { UsersOperators } from '../../../models/UsersOperators';
 import * as moment from 'moment';
@@ -10,6 +10,7 @@ import { GlobalDto } from '../../../dto/global.dto';
 import { Languages } from '../../../models/Languages';
 import { Countries } from '../../../models/Countries';
 import { PayOptions } from '../../../models/PayOptions';
+import { Repository } from 'typeorm/repository/Repository';
 @Injectable()
 export class OperatorService {
     constructor(
@@ -81,6 +82,9 @@ export class OperatorService {
         req.registerDate = new Date();
         return this._countriesRepository.save(req);
     }
+    listCountries():Promise<Countries[]>{
+        return this._countriesRepository.find({state: true});
+    }
     async agregarNuevoOperador(req: ReqOperatorsDto): Promise<GlobalDto> {
         const res: GlobalDto = <GlobalDto>{};
         const connection = getConnection();
@@ -118,7 +122,7 @@ export class OperatorService {
         return this._operatorRepository.findOne({idOperator: id});
     }
     findByUserAndPass(user: string, pass: string): Promise<Operators> {
-        return this._operatorRepository.findOne({user: user, pass: pass});
+        return this._operatorRepository.findOne({email: user, pass: pass});
     }
     findUserOperatorByOperator(id: string): Promise<Array<UsersOperators>> {
         return this._userOperatorRepository.find({idOperator: id, state: true});

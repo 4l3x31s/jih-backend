@@ -1,26 +1,19 @@
-import {
-  Column,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SupportLanguages } from "./SupportLanguages";
 import { Users } from "./Users";
 
-@Index("pk_languages", ["idLanguage"], { unique: true })
-@Entity("languages", { schema: "public" })
+@Entity("languages", { schema: "jih" })
 export class Languages {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_language" })
   idLanguage: string;
 
-  @Column("character varying", { name: "abreviation", length: 3 })
+  @Column("varchar", { name: "abreviation", length: 3 })
   abreviation: string;
 
   @Column("text", { name: "description" })
   description: string;
 
-  @Column("boolean", { name: "state" })
+  @Column("tinyint", { name: "state", width: 1 })
   state: boolean;
 
   @OneToMany(

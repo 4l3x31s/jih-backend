@@ -9,13 +9,12 @@ import { OperatorModule } from './modules/operator/operator.module';
   imports: [
     TypeOrmModule.forRoot({
       name: 'default',
-      type: 'postgres',
-      host: '172.21.43.79',
-      port: 5432,
-      username: "postgres",
-			password: "postgres",
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: "root",
+			password: "jhipassword",
       database: 'JIH',
-      schema: "public",
       synchronize: false,
       entities: [__dirname + '/models/**/*{.ts,.js}'],
       autoLoadEntities: true,

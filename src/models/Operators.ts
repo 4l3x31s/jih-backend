@@ -11,9 +11,8 @@ import { Countries } from "./Countries";
 import { SupportLanguages } from "./SupportLanguages";
 import { UsersOperators } from "./UsersOperators";
 
-@Index("ixfk_operator_country", ["idCountry"], {})
-@Index("pk_operator", ["idOperator"], { unique: true })
-@Entity("operators", { schema: "public" })
+@Index("IXFK_operator_country", ["idCountry"], {})
+@Entity("operators", { schema: "jih" })
 export class Operators {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_operator" })
   idOperator: string;
@@ -24,10 +23,7 @@ export class Operators {
   @Column("text", { name: "name" })
   name: string;
 
-  @Column("text", { name: "user" })
-  user: string;
-
-  @Column("character varying", { name: "pass", length: 50 })
+  @Column("varchar", { name: "pass", length: 50 })
   pass: string;
 
   @Column("text", { name: "phone_number" })
@@ -36,13 +32,16 @@ export class Operators {
   @Column("text", { name: "email" })
   email: string;
 
-  @Column("timestamp without time zone", { name: "date" })
+  @Column("datetime", { name: "date" })
   date: Date;
 
-  @Column("boolean", { name: "state" })
+  @Column("tinyint", { name: "state", width: 1 })
   state: boolean;
 
-  @ManyToOne(() => Countries, (countries) => countries.operators)
+  @ManyToOne(() => Countries, (countries) => countries.operators, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
   @JoinColumn([{ name: "id_country", referencedColumnName: "idCountry" }])
   idCountry2: Countries;
 

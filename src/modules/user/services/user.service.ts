@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository } from 'typeorm/repository/Repository';
 import { Users } from '../../../models/Users';
 import { UsersOperators } from '../../../models/UsersOperators';
 
@@ -15,7 +15,6 @@ export class UserService {
 
     createUser(user: Users): Promise<Users>{
         user.registrationDate = new Date();
-        user.user = user.email;
         if(user.state === undefined) {
             user.state = true;
         }

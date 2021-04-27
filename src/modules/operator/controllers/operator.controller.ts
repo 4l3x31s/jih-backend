@@ -57,6 +57,10 @@ export class OperatorController {
     createCountries(@Body() req: Countries):Promise<Countries> {
         return this.operatorService.createCountries(req);
     }
+    @Get('list-countries')
+    listCountries():Promise<Countries[]>{
+        return this.operatorService.listCountries();
+    }
     @Post('register-operator')
     async agregarNuevoOperador(@Body() req: ReqOperatorsDto): Promise<GlobalDto> {
         return this.operatorService.agregarNuevoOperador(req);

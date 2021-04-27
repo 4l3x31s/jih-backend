@@ -9,10 +9,9 @@ import {
 import { Operators } from "./Operators";
 import { Users } from "./Users";
 
-@Index("ixfk_user_operator_operator", ["idOperator"], {})
-@Index("ixfk_user_operator_user", ["idUser"], {})
-@Index("pk_user_operator", ["idUserOperator"], { unique: true })
-@Entity("users_operators", { schema: "public" })
+@Index("IXFK_user_operator_operator", ["idOperator"], {})
+@Index("IXFK_user_operator_user", ["idUser"], {})
+@Entity("users_operators", { schema: "jih" })
 export class UsersOperators {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_user_operator" })
   idUserOperator: string;
@@ -26,20 +25,26 @@ export class UsersOperators {
   @Column("text", { name: "comments", nullable: true })
   comments: string | null;
 
-  @Column("integer", { name: "qualification", nullable: true })
+  @Column("int", { name: "qualification", nullable: true })
   qualification: number | null;
 
-  @Column("timestamp without time zone", { name: "registration_date" })
+  @Column("datetime", { name: "registration_date" })
   registrationDate: Date;
 
-  @Column("boolean", { name: "state" })
+  @Column("tinyint", { name: "state", width: 1 })
   state: boolean;
 
-  @ManyToOne(() => Operators, (operators) => operators.usersOperators)
+  @ManyToOne(() => Operators, (operators) => operators.usersOperators, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
   @JoinColumn([{ name: "id_operator", referencedColumnName: "idOperator" }])
   idOperator2: Operators;
 
-  @ManyToOne(() => Users, (users) => users.usersOperators)
+  @ManyToOne(() => Users, (users) => users.usersOperators, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
   @JoinColumn([{ name: "id_user", referencedColumnName: "idUser" }])
   idUser2: Users;
 }

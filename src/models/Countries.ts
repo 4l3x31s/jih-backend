@@ -1,14 +1,7 @@
-import {
-  Column,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Operators } from "./Operators";
 
-@Index("pk_country", ["idCountry"], { unique: true })
-@Entity("countries", { schema: "public" })
+@Entity("countries", { schema: "jih" })
 export class Countries {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_country" })
   idCountry: string;
@@ -16,16 +9,19 @@ export class Countries {
   @Column("text", { name: "name_country" })
   nameCountry: string;
 
-  @Column("character varying", { name: "alpha_code_2", length: 3 })
+  @Column("varchar", { name: "calling_code", nullable: true, length: 50 })
+  callingCode: string | null;
+
+  @Column("varchar", { name: "alpha_code_2", length: 3 })
   alphaCode_2: string;
 
-  @Column("character varying", { name: "alpha_code_3", length: 4 })
+  @Column("varchar", { name: "alpha_code_3", length: 4 })
   alphaCode_3: string;
 
-  @Column("timestamp without time zone", { name: "register_date" })
+  @Column("datetime", { name: "register_date" })
   registerDate: Date;
 
-  @Column("boolean", { name: "state" })
+  @Column("tinyint", { name: "state", width: 1 })
   state: boolean;
 
   @OneToMany(() => Operators, (operators) => operators.idCountry2)
