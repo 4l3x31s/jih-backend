@@ -1,3 +1,4 @@
+import { ResOperadorDto } from './../../../dto/res-operador.dto';
 import { SupportLanguages } from './../../../models/SupportLanguages';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { OperatorService } from '../services/operator.service';
@@ -9,6 +10,7 @@ import { ReqOperatorsDto } from '../../../dto/req-operators.dto';
 import { GlobalDto } from '../../../dto/global.dto';
 import { UsersOperators } from '../../../models/UsersOperators';
 import { LoginDto } from '../../../dto/login.dto';
+
 
 @Controller('operator')
 export class OperatorController {
@@ -62,7 +64,7 @@ export class OperatorController {
         return this.operatorService.listCountries();
     }
     @Post('register-operator')
-    async agregarNuevoOperador(@Body() req: ReqOperatorsDto): Promise<GlobalDto> {
+    async agregarNuevoOperador(@Body() req: ReqOperatorsDto): Promise<ResOperadorDto> {
         return this.operatorService.agregarNuevoOperador(req);
     }
     @Get('operator-by-id/:id')
@@ -78,7 +80,12 @@ export class OperatorController {
         return this.operatorService.findUserOperatorByOperator(id);
     }
     @Get('operator-by-language/:id')
-    async findByLanguage(@Param('id') idLanguage: string): Promise<Operators> {
+    async findByLanguage(@Param('id') idLanguage: string): Promise<Array<Operators>> {
+        console.log(idLanguage)
         return await this.operatorService.findByLanguage(idLanguage);
+    }
+    @Post('create-user-operator')
+    async registerUserOperator(@Body() userOperator: UsersOperators): Promise<UsersOperators>{
+        return await this.operatorService.registerUserOperator(userOperator);
     }
 }

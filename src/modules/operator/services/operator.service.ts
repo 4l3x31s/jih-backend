@@ -1,3 +1,4 @@
+import { ResOperadorDto } from './../../../dto/res-operador.dto';
 import { SupportLanguages } from './../../../models/SupportLanguages';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,6 +12,7 @@ import { Languages } from '../../../models/Languages';
 import { Countries } from '../../../models/Countries';
 import { PayOptions } from '../../../models/PayOptions';
 import { Repository } from 'typeorm/repository/Repository';
+
 @Injectable()
 export class OperatorService {
     constructor(
@@ -85,8 +87,8 @@ export class OperatorService {
     listCountries():Promise<Countries[]>{
         return this._countriesRepository.find({state: true});
     }
-    async agregarNuevoOperador(req: ReqOperatorsDto): Promise<GlobalDto> {
-        const res: GlobalDto = <GlobalDto>{};
+    async agregarNuevoOperador(req: ReqOperatorsDto): Promise<ResOperadorDto> {
+        const res: ResOperadorDto = <ResOperadorDto>{};
         const connection = getConnection();
         const queryRunner = connection.createQueryRunner();
         await queryRunner.connect();
@@ -94,6 +96,7 @@ export class OperatorService {
         const operatorsRepository = queryRunner.manager.getRepository(Operators);
         const supportLanguagesRepository = queryRunner.manager.getRepository(SupportLanguages);
         try {
+            
             const fechaActual = new Date(moment(new Date(), 'YYYY-MM-DD HH:mm').toDate());
             req.operator.state = true;
             req.operator.date = new Date();
@@ -101,6 +104,7 @@ export class OperatorService {
             /*for (const iterator of req.languages) {
                 iterator.idOperator = newOperator.idOperator;
             }*/
+            res.operator = newOperator;
             for (let index = 0; index < req.languages.length; index++) {
                 req.languages[index].idOperator= newOperator.idOperator;
                 req.languages[index].registerDate = new Date();
@@ -127,9 +131,16 @@ export class OperatorService {
     findUserOperatorByOperator(id: string): Promise<Array<UsersOperators>> {
         return this._userOperatorRepository.find({idOperator: id, state: true});
     }
-    async findByLanguage(idLanguage: string): Promise<Operators> {
+    async registerUserOperator(userOperator: UsersOperators): Promise<UsersOperators>{
+        userOperator.state = true;
+        userOperator.qualification = 5;
+        userOperator.comments = "Client call to operator.";
+        userOperator.registrationDate = new Date();
+        return await this._userOperatorRepository.save(userOperator);
+    }
+    async findByLanguage(idLanguage: string): Promise<Array<Operators>> {
         return await this._operatorRepository.query(`
-                SELECT o.* FROM operator o, support_languages sl, languages lan
+                SELECT o.* FROM operators o, support_languages sl, languages lan
                 where lan.id_language = sl.id_language
                 and sl.id_operator = o.id_operator
                 and lan.id_language = `+ idLanguage+`
