@@ -88,4 +88,8 @@ export class OperatorController {
     async registerUserOperator(@Body() userOperator: UsersOperators): Promise<UsersOperators>{
         return await this.operatorService.registerUserOperator(userOperator);
     }
+    @Get('ejemplo/:id')
+    async ejemplo(@Param('id') idLanguage: string){
+        return this.operatorService.ejemplo(idLanguage);
+    }
 }

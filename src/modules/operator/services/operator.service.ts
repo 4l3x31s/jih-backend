@@ -146,4 +146,12 @@ export class OperatorService {
                 and lan.id_language = `+ idLanguage+`
                 and o.state= true;`);
     }
+    async ejemplo(idLanguage: string){
+        return this._operatorRepository.createQueryBuilder('operators')
+                .leftJoin('operators.supportLanguages', 'supportLanguages')
+                .leftJoin('supportLanguages.idLanguage2','languages')
+                .where('languages.idLanguage = '+ idLanguage)
+                .andWhere('operators.state = true')
+                .getMany();
+    }
 }
