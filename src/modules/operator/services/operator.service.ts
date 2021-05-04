@@ -1,3 +1,4 @@
+import { GlobalDto } from './../../../dto/global.dto';
 import { ResOperadorDto } from './../../../dto/res-operador.dto';
 import { SupportLanguages } from './../../../models/SupportLanguages';
 import { Injectable } from '@nestjs/common';
@@ -7,11 +8,12 @@ import { Operators } from '../../../models/Operators';
 import { UsersOperators } from '../../../models/UsersOperators';
 import * as moment from 'moment';
 import { ReqOperatorsDto } from '../../../dto/req-operators.dto';
-import { GlobalDto } from '../../../dto/global.dto';
 import { Languages } from '../../../models/Languages';
 import { Countries } from '../../../models/Countries';
 import { PayOptions } from '../../../models/PayOptions';
 import { Repository } from 'typeorm/repository/Repository';
+import { OperatorAvailableDto } from '../../../dto/operator-available.dto';
+
 
 @Injectable()
 export class OperatorService {
@@ -138,13 +140,47 @@ export class OperatorService {
         userOperator.registrationDate = new Date();
         return await this._userOperatorRepository.save(userOperator);
     }
-    async findByLanguage(idLanguage: string): Promise<Array<Operators>> {
-        return await this._operatorRepository.query(`
-                SELECT o.* FROM operators o, support_languages sl, languages lan
-                where lan.id_language = sl.id_language
-                and sl.id_operator = o.id_operator
-                and lan.id_language = `+ idLanguage+`
-                and o.state= true;`);
+    async findByLanguage(idLanguage: string): Promise<OperatorAvailableDto> {
+        const resp: OperatorAvailableDto = <OperatorAvailableDto>{};
+        try{
+            
+            const lstOperator: Operators = await this._operatorRepository.createQueryBuilder('operators')
+                                        .leftJoin('operators.supportLanguages', 'supportLanguages')
+                                        .leftJoin('supportLanguages.idLanguage2','languages')
+                                        .where('languages.idLanguage = '+ idLanguage)
+                                        .andWhere('operators.state = true')
+                                        .getOne();
+            resp.operator = lstOperator;
+            resp.state = true;
+            resp.message = '';
+            lstOperator.state = false;
+            this._operatorRepository.save(lstOperator);
+        }catch(ex){
+            resp.state = false;
+            resp.message = 'Error contact to Operator';
+        }
+        return resp;
+    }
+    async changeStateById(idOperator: string): Promise<GlobalDto> {
+        const res: GlobalDto = <GlobalDto>{}
+        try {
+            const operator: Operators = await this._operatorRepository.findOneOrFail({idOperator: idOperator, state: false});
+            if(operator.state){
+                res.state = true;
+                res.message='';
+            }else{
+                operator.state = true;
+                this._operatorRepository.save(operator);
+                res.state = true;
+                res.message='';
+            }
+            
+        }catch(err) {
+            res.state = false;
+            res.message='';
+        }
+        
+        return res;
     }
     async ejemplo(idLanguage: string){
         return this._operatorRepository.createQueryBuilder('operators')

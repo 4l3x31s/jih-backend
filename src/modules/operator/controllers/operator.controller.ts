@@ -1,3 +1,4 @@
+import { OperatorAvailableDto } from './../../../dto/operator-available.dto';
 import { ResOperadorDto } from './../../../dto/res-operador.dto';
 import { SupportLanguages } from './../../../models/SupportLanguages';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { ReqOperatorsDto } from '../../../dto/req-operators.dto';
 import { GlobalDto } from '../../../dto/global.dto';
 import { UsersOperators } from '../../../models/UsersOperators';
 import { LoginDto } from '../../../dto/login.dto';
+
 
 
 @Controller('operator')
@@ -80,7 +82,7 @@ export class OperatorController {
         return this.operatorService.findUserOperatorByOperator(id);
     }
     @Get('operator-by-language/:id')
-    async findByLanguage(@Param('id') idLanguage: string): Promise<Array<Operators>> {
+    async findByLanguage(@Param('id') idLanguage: string): Promise<OperatorAvailableDto> {
         console.log(idLanguage)
         return await this.operatorService.findByLanguage(idLanguage);
     }
