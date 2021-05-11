@@ -21,6 +21,7 @@ export class OperatorController {
     )
     { }
 
+    //TODO: tareas
     @Get('list-operator')
     listOperator(): Promise<Array<Operators>> {
         return this.operatorService.listOperator();
