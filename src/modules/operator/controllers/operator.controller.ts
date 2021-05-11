@@ -91,6 +91,11 @@ export class OperatorController {
     async registerUserOperator(@Body() userOperator: UsersOperators): Promise<UsersOperators>{
         return await this.operatorService.registerUserOperator(userOperator);
     }
+    @Get('enable-operator/:id')
+    async enableOperator(@Param('id') id: string): Promise<Operators>{
+        console.log(id);
+        return await this.operatorService.enableOperator(id);
+    }
     @Get('ejemplo/:id')
     async ejemplo(@Param('id') idLanguage: string){
         return this.operatorService.ejemplo(idLanguage);

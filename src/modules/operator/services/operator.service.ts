@@ -89,6 +89,14 @@ export class OperatorService {
     listCountries():Promise<Countries[]>{
         return this._countriesRepository.find({state: true});
     }
+    async enableOperator(id: string): Promise<Operators>{
+        let operator: Operators = await this.findById(id);
+        if(!operator.state){
+            operator.state = true;
+            return this._operatorRepository.save(operator);
+        }
+        return this.findById(id)
+    }
     async agregarNuevoOperador(req: ReqOperatorsDto): Promise<ResOperadorDto> {
         const res: ResOperadorDto = <ResOperadorDto>{};
         const connection = getConnection();
