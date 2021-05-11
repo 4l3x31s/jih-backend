@@ -91,6 +91,7 @@ export class OperatorService {
     }
     async enableOperator(id: string): Promise<Operators>{
         let operator: Operators = await this.findById(id);
+        
         if(!operator.state){
             operator.state = true;
             return this._operatorRepository.save(operator);

@@ -84,7 +84,6 @@ export class OperatorController {
     }
     @Get('operator-by-language/:id')
     async findByLanguage(@Param('id') idLanguage: string): Promise<OperatorAvailableDto> {
-        console.log(idLanguage)
         return await this.operatorService.findByLanguage(idLanguage);
     }
     @Post('create-user-operator')
