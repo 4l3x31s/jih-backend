@@ -7,6 +7,8 @@ import { Users } from '../../../models/Users';
 import { UsersOperators } from '../../../models/UsersOperators';
 import { GlobalDto } from '../../../dto/global.dto';
 import { UserValidator } from '../../../dto/user-validator.dto';
+import { Countries } from '../../../models/Countries';
+
 
 @Injectable()
 export class UserService {
@@ -15,14 +17,19 @@ export class UserService {
         private readonly _usersRepository: Repository<Users>,
         @InjectRepository(UsersOperators)
         private readonly _usersOperatorsRepository: Repository<UsersOperators>,
+        @InjectRepository(Countries)
+        private readonly _countriesRepository: Repository<Countries>,
     ) { }
 
-    createUser(user: Users): Promise<Users>{
+    async createUser(user: Users): Promise<Users>{
         try{
             user.registrationDate = new Date();
             if(user.state === undefined) {
                 user.state = true;
             }
+            let country = await this._countriesRepository.findOne({idCountry: user.idCountry})
+            let newPhone = country.callingCode + user.phone;
+            user.phone = newPhone;
             return this._usersRepository.save(user);
         }catch(ex) {
 
