@@ -18,11 +18,16 @@ export class UserService {
     ) { }
 
     createUser(user: Users): Promise<Users>{
-        user.registrationDate = new Date();
-        if(user.state === undefined) {
-            user.state = true;
+        try{
+            user.registrationDate = new Date();
+            if(user.state === undefined) {
+                user.state = true;
+            }
+            return this._usersRepository.save(user);
+        }catch(ex) {
+
         }
-        return this._usersRepository.save(user);
+        
     }
     findUserByUserPass(user: string, pass: string):Promise<Users> {
         console.log(user)
@@ -49,7 +54,9 @@ export class UserService {
     }
     async validateEmail(email: string): Promise<GlobalDto>{
         let response: GlobalDto = <GlobalDto>{};
-        const responseEmail = await this._usersRepository.find({email: email, state: true});
+        console.log(email)
+        const responseEmail = await this._usersRepository.findOne({email: email, state: true});
+        console.log(responseEmail);
         if(responseEmail){
             response.message = "El correo ya está registrado intenta con otro.";
             response.state = false;
@@ -57,7 +64,7 @@ export class UserService {
             response.message = "";
             response.state = true;
         }
-
+        console.log(response);
         return response;
     }
 }
