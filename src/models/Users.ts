@@ -11,6 +11,8 @@ import { Languages } from "./Languages";
 import { PayOptions } from "./PayOptions";
 import { UsersOperators } from "./UsersOperators";
 
+@Index("UK_user_email", ["email"], { unique: true })
+@Index("UK_user_phone", ["phone"], { unique: true })
 @Index("IXFK_user_languages", ["idLanguage"], {})
 @Index("IXFK_user_pay_option", ["idPayOption"], {})
 @Entity("users", { schema: "jih" })
@@ -30,10 +32,10 @@ export class Users {
   @Column("text", { name: "name" })
   name: string;
 
-  @Column("text", { name: "phone" })
+  @Column("varchar", { name: "phone", unique: true, length: 150 })
   phone: string;
 
-  @Column("text", { name: "email" })
+  @Column("varchar", { name: "email", unique: true, length: 300 })
   email: string;
 
   @Column("text", { name: "pass" })

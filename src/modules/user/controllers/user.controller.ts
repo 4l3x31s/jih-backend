@@ -1,8 +1,11 @@
+import { UserValidator } from '../../../dto/user-validator.dto';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { Users } from '../../../models/Users';
 import { LoginDto } from '../../../dto/login.dto';
 import { UsersOperators } from '../../../models/UsersOperators';
+import { GlobalDto } from '../../../dto/global.dto';
+
 
 @Controller('user')
 export class UserController {
@@ -25,4 +28,14 @@ export class UserController {
     createUserOperators(@Body() userOperator: UsersOperators): Promise<UsersOperators> {
         return this.userService.createUserOperators(userOperator);
     }
+    @Post('user-validate')
+    findUserByIdAndEmail(@Body() request: UserValidator):Promise<GlobalDto> {
+        return this.userService.findUserByIdAndEmail(request);
+    }
+    @Get('email-validate/:email')
+    validateEmail(@Param('email') email: string): Promise<GlobalDto>{
+        return this.userService.validateEmail(email);
+    }
+
+    
 }

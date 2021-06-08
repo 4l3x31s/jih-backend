@@ -11,6 +11,7 @@ import { ReqOperatorsDto } from '../../../dto/req-operators.dto';
 import { GlobalDto } from '../../../dto/global.dto';
 import { UsersOperators } from '../../../models/UsersOperators';
 import { LoginDto } from '../../../dto/login.dto';
+import { UserValidator } from '../../../dto/user-validator.dto';
 
 
 
@@ -98,5 +99,13 @@ export class OperatorController {
     @Get('ejemplo/:id')
     async ejemplo(@Param('id') idLanguage: string){
         return this.operatorService.ejemplo(idLanguage);
+    }
+    @Post('operator-validate')
+    findUserByIdAndEmail(@Body() request: UserValidator):Promise<GlobalDto> {
+        return this.operatorService.findUserByIdAndEmail(request);
+    }
+    @Get('email-validate/:email')
+    validateEmail(@Param('email') email: string): Promise<GlobalDto>{
+        return this.operatorService.validateEmail(email);
     }
 }

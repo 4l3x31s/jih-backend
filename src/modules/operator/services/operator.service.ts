@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { GlobalDto } from './../../../dto/global.dto';
 import { ResOperadorDto } from './../../../dto/res-operador.dto';
 import { SupportLanguages } from './../../../models/SupportLanguages';
@@ -13,6 +14,7 @@ import { Countries } from '../../../models/Countries';
 import { PayOptions } from '../../../models/PayOptions';
 import { Repository } from 'typeorm/repository/Repository';
 import { OperatorAvailableDto } from '../../../dto/operator-available.dto';
+import { UserValidator } from '../../../dto/user-validator.dto';
 
 
 @Injectable()
@@ -37,7 +39,7 @@ export class OperatorService {
     createOperator(req: Operators): Promise<Operators>{
         req.date = new Date();
         if(req.state === undefined){
-            req.state = true;
+            req.state = 1;
         }
         return this._operatorRepository.save(req);
     }
@@ -92,8 +94,8 @@ export class OperatorService {
     async enableOperator(id: string): Promise<Operators>{
         let operator: Operators = await this.findById(id);
         
-        if(!operator.state){
-            operator.state = true;
+        if(operator.state === 3){
+            operator.state = 1;
             return this._operatorRepository.save(operator);
         }
         return this.findById(id)
@@ -109,7 +111,7 @@ export class OperatorService {
         try {
             
             const fechaActual = new Date(moment(new Date(), 'YYYY-MM-DD HH:mm').toDate());
-            req.operator.state = true;
+            req.operator.state = 1;
             req.operator.date = new Date();
             const newOperator: Operators = await operatorsRepository.save(req.operator);
             /*for (const iterator of req.languages) {
@@ -162,7 +164,7 @@ export class OperatorService {
             resp.operator = lstOperator;
             resp.state = true;
             resp.message = '';
-            lstOperator.state = false;
+            lstOperator.state = 3;
             this._operatorRepository.save(lstOperator);
         }catch(ex){
             resp.state = false;
@@ -173,12 +175,12 @@ export class OperatorService {
     async changeStateById(idOperator: string): Promise<GlobalDto> {
         const res: GlobalDto = <GlobalDto>{}
         try {
-            const operator: Operators = await this._operatorRepository.findOneOrFail({idOperator: idOperator, state: false});
-            if(operator.state){
+            const operator: Operators = await this._operatorRepository.findOneOrFail({idOperator: idOperator, state: 0});
+            if(operator.state === 1){
                 res.state = true;
                 res.message='';
             }else{
-                operator.state = true;
+                operator.state = 1;
                 this._operatorRepository.save(operator);
                 res.state = true;
                 res.message='';
@@ -198,5 +200,42 @@ export class OperatorService {
                 .where('languages.idLanguage = '+ idLanguage)
                 .andWhere('operators.state = true')
                 .getMany();
+    }
+
+    async findUserByIdAndEmail(request: UserValidator):Promise<GlobalDto> {
+        let response: GlobalDto = <GlobalDto>{};
+        try{
+            
+            const userResponse = await this._operatorRepository.findOne({idOperator: request.idUser, email: request.user, state: 1});
+            if(userResponse){
+                response.message = "";
+                response.state = true;
+            } else {
+                response.message = "El usuario no se encuentra disponible.";
+                response.state = false;
+            }
+        }catch(ex) {
+            response.message = "El usuario no se encuentra disponible.";
+            response.state = false;
+        }
+        
+        return response;
+    }
+    async validateEmail(email: string): Promise<GlobalDto>{
+        let response: GlobalDto = <GlobalDto>{};
+        try{
+            const responseEmail = await this._operatorRepository.find({email: email, state: 1});
+            if(responseEmail){
+                response.message = "El correo ya está registrado intenta con otro.";
+                response.state = false;
+            } else {
+                response.message = "";
+                response.state = true;
+            }
+        }catch(ex) {
+            response.message = "";
+            response.state = true;
+        }
+        return response;
     }
 }

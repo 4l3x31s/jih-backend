@@ -11,6 +11,8 @@ import { Countries } from "./Countries";
 import { SupportLanguages } from "./SupportLanguages";
 import { UsersOperators } from "./UsersOperators";
 
+@Index("UK_operator_email", ["email"], { unique: true })
+@Index("UK_operator_phone_number", ["phoneNumber"], { unique: true })
 @Index("IXFK_operator_country", ["idCountry"], {})
 @Entity("operators", { schema: "jih" })
 export class Operators {
@@ -26,17 +28,17 @@ export class Operators {
   @Column("varchar", { name: "pass", length: 50 })
   pass: string;
 
-  @Column("text", { name: "phone_number" })
+  @Column("varchar", { name: "phone_number", unique: true, length: 150 })
   phoneNumber: string;
 
-  @Column("text", { name: "email" })
+  @Column("varchar", { name: "email", unique: true, length: 300 })
   email: string;
 
   @Column("datetime", { name: "date" })
   date: Date;
 
-  @Column("tinyint", { name: "state", width: 1 })
-  state: boolean;
+  @Column("int", { name: "state" })
+  state: number;
 
   @ManyToOne(() => Countries, (countries) => countries.operators, {
     onDelete: "NO ACTION",
