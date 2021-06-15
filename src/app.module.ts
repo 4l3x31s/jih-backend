@@ -10,13 +10,13 @@ import { OperatorModule } from './modules/operator/operator.module';
     TypeOrmModule.forRoot({
       name: 'default',
       type: 'mysql',
-      host: 'localhost',
-      //host: 'first-db.cwlocepqhmf2.us-east-2.rds.amazonaws.com',
+      //host: 'localhost',
+      host: 'first-db.cwlocepqhmf2.us-east-2.rds.amazonaws.com',
       port: 3306,
-      /*username: "admin",
-			password: "Al3x31s123$",*/
-      username: "root",
-			password: "jhipassword",
+      username: "admin",
+			password: "Al3x31s123$",
+      /*username: "root",
+			password: "jhipassword",*/
       database: 'jih',
       synchronize: false,
       entities: [__dirname + '/models/**/*{.ts,.js}'],
