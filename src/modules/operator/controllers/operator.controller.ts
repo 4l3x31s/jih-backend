@@ -77,6 +77,7 @@ export class OperatorController {
     }
     @Post('login-operator')
     findByUserAndPass(@Body() login: LoginDto): Promise<Operators> {
+        console.log(login);
         return this.operatorService.findByUserAndPass(login.user,login.pass);
     }
     @Get('user-operator-by-operator/:id')
