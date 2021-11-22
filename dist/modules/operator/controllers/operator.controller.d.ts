@@ -1,0 +1,38 @@
+import { OperatorAvailableDto } from './../../../dto/operator-available.dto';
+import { ResOperadorDto } from './../../../dto/res-operador.dto';
+import { SupportLanguages } from './../../../models/SupportLanguages';
+import { OperatorService } from '../services/operator.service';
+import { Operators } from '../../../models/Operators';
+import { PayOptions } from '../../../models/PayOptions';
+import { Languages } from '../../../models/Languages';
+import { Countries } from '../../../models/Countries';
+import { ReqOperatorsDto } from '../../../dto/req-operators.dto';
+import { GlobalDto } from '../../../dto/global.dto';
+import { UsersOperators } from '../../../models/UsersOperators';
+import { LoginDto } from '../../../dto/login.dto';
+import { UserValidator } from '../../../dto/user-validator.dto';
+export declare class OperatorController {
+    private operatorService;
+    constructor(operatorService: OperatorService);
+    listOperator(): Promise<Array<Operators>>;
+    createOperator(req: Operators): Promise<Operators>;
+    createSupportLanguages(req: SupportLanguages[]): Promise<SupportLanguages[]>;
+    listSupportLanguagesByOperator(idOperator: string): Promise<SupportLanguages[]>;
+    createSupportLanguagesOne(req: SupportLanguages): Promise<SupportLanguages>;
+    createPayOptions(req: PayOptions): Promise<PayOptions>;
+    listPayOptions(): Promise<PayOptions[]>;
+    createLanguages(req: Languages): Promise<Languages>;
+    listLanguages(): Promise<Languages[]>;
+    createCountries(req: Countries): Promise<Countries>;
+    listCountries(): Promise<Countries[]>;
+    agregarNuevoOperador(req: ReqOperatorsDto): Promise<ResOperadorDto>;
+    findById(id: string): Promise<Operators>;
+    findByUserAndPass(login: LoginDto): Promise<Operators>;
+    findUserOperatorByOperator(id: string): Promise<Array<UsersOperators>>;
+    findByLanguage(idLanguage: string): Promise<OperatorAvailableDto>;
+    registerUserOperator(userOperator: UsersOperators): Promise<UsersOperators>;
+    enableOperator(id: string): Promise<Operators>;
+    ejemplo(idLanguage: string): Promise<Operators[]>;
+    findUserByIdAndEmail(request: UserValidator): Promise<GlobalDto>;
+    validateEmail(email: string): Promise<GlobalDto>;
+}
