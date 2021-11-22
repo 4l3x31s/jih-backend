@@ -14,7 +14,7 @@ import { OperatorModule } from './modules/operator/operator.module';
       host: 'first-db.cwlocepqhmf2.us-east-2.rds.amazonaws.com',
       port: 3306,
       username: "admin",
-			password: "Al3x31s123$",
+			password: "@Jumpinhelp2021",
       /*username: "root",
 			password: "jhipassword",*/
       database: 'jih',
